@@ -1,0 +1,71 @@
+import random
+
+# Post-apocalyptic style names
+male_first_names = ["Arin", "Brynn", "Cale", "Dara", "Elric", "Fay", "Gavin", "Hale", "Ivor", "Jor", "Kane", "Liam", "Marek", "Nyle", "Owen", "Pike", "Quin", "Reed", "Soren", "Talon", "Uther", "Vance", "Wade", "Xander", "Yorick", "Zane", "Alexander", "Scott", "Violet", "Frances", "Lydia"]
+female_first_names = ["Aria", "Brynn", "Cora", "Dara", "Elena", "Faye", "Gwen", "Hara", "Iris", "Jade", "Kara", "Lara", "Maeve", "Nina", "Opal", "Pia", "Quinn", "Rose", "Sara", "Tara", "Ula", "Vera", "Wyn", "Xena", "Yara", "Zara", "Alexander", "Scott", "Violet", "Frances", "Lydia"]
+last_names = ["Blade", "Storm", "Wraith", "Steel", "Viper", "Shade", "Raven", "Falcon", "Shadow", "Phoenix", "Wolf", "Scar", "Talon", "Cross", "Stryker", "Edge", "Swanson"]
+
+# Possible options for each character attribute
+races_classes = {
+    "Human": ["Ranger", "Assault", "Sniper", "Medic", "Mechanic", "Leader"],
+}
+backgrounds = ["Desert Nomad", "Farmhand", "Scavenger", "Raider Survivor", "Wasteland Historian", "Pre-War Technician", "Pilot", "Theoretical Physicist", "Nomadic Warrior"]
+
+skills = ["Weaponsmithing", "Field Medic", "Lockpicking", "Perception", "Toaster Repair", "Animal Whisperer", "Brute Force", "Demolitions", "Leadership"]
+
+def roll_ability_scores():
+    return sum(sorted(random.choices(range(1, 7), k=4))[1:])
+
+def generate_name():
+    gender = random.choice(["male", "female"])
+    first_name = random.choice(male_first_names if gender == "male" else female_first_names)
+    last_name = random.choice(last_names)
+    return f"{first_name} {last_name}"
+
+def generate_backstory(character):
+    name = character["Name"]
+    race = character["Race"]
+    char_class = character["Class"]
+    background = character["Background"]
+    skill_1, skill_2, skill_3 = character["Skills"]
+    
+    backstories = [
+        f"{name} grew up in the harsh wastes of Arizona, where survival meant mastering the skills of a {char_class.lower()} and {skill_1.lower()}. Their upbringing as a {background.lower()} taught them the value of resourcefulness and adaptability. Their journey began when they joined the Desert Rangers, a band of elite operatives dedicated to restoring order in a lawless land. With {skill_2.lower()} and {skill_3.lower()} at their disposal, {name} embarked on dangerous missions to eradicate bandit camps and uncover the secrets of pre-war technology. Along the way, they forged alliances with fellow Rangers and faced moral dilemmas that tested their resolve and shaped their destiny. {name}'s leadership skills and tactical prowess were put to the test when a new threat emerged from the radioactive depths of the Grand Canyon, threatening to engulf the wasteland in chaos. In a race against time, {name} must navigate the treacherous landscape of power-hungry factions and ancient artifacts, seeking to prevent a second apocalypse and secure a future for humanity in the unforgiving desert.",
+        f"Born in a secluded bunker beneath the irradiated ruins of Los Angeles, {name} was raised on tales of the old world and trained as a {char_class.lower()} from a young age. Their proficiency in {skill_1.lower()} and {skill_2.lower()} marked them as a valuable asset to their community. Their journey began when they received a distress signal from a nearby settlement under siege by raiders. With {skill_3.lower()} at their disposal, {name} ventured into the wasteland, battling mutants and scavenging for supplies to aid the besieged survivors. Along the way, they encountered remnants of the old world and uncovered a conspiracy that threatened to plunge the wasteland into chaos. Now, {name} must navigate the treacherous landscape of power-hungry factions and ancient artifacts, seeking allies among rival clans and unraveling the mysteries of a forgotten civilization to restore hope to a dying world.",
+        f"{name} was created in a secret laboratory hidden deep within the radioactive wastelands of Nevada. Programmed with the skills of a {char_class.lower()} and {skill_1.lower()}, they were designed to be the ultimate weapon against the forces of chaos. Their journey began when they escaped from their creators and ventured into the unforgiving desert, seeking refuge among a tribe of mutant outcasts. With {skill_2.lower()} and {skill_3.lower()} at their disposal, {name} embraced their newfound freedom and vowed to protect their new family from the tyranny of the old world. Along the way, they faced prejudice and persecution, but their courage and resilience never wavered. Now, {name} must navigate the treacherous landscape of power-hungry factions and ancient artifacts, seeking to unite the disparate tribes and forge a new alliance to challenge the tyranny of the Desert Rangers and bring peace to a war-torn wasteland."
+    ]
+    return random.choice(backstories) + f" They are a {race.lower()}."
+
+def generate_character():
+    race = random.choice(list(races_classes.keys()))
+    char_class = random.choice(races_classes[race])
+    background = random.choice(backgrounds)
+    name = generate_name()
+    skills_list = random.sample(skills, 3)
+    
+    character = {
+        "Name": name,
+        "Race": race,
+        "Class": char_class,
+        "Background": background,
+        "Strength": roll_ability_scores(),
+        "Coordination": roll_ability_scores(),
+        "Luck": roll_ability_scores(),
+        "Awareness": roll_ability_scores(),
+        "Speed": roll_ability_scores(),
+        "Intelligence": roll_ability_scores(),
+        "Skills": skills_list,
+        "Backstory": generate_backstory({
+            "Name": name,
+            "Race": race,
+            "Class": char_class,
+            "Background": background,
+            "Skills": skills_list
+        })
+    }
+    return character
+
+# Generate and print a character
+character = generate_character()
+for attribute, value in character.items():
+    print(f"{attribute}: {value}")
